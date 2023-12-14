@@ -1,6 +1,6 @@
 import sys
 import csv
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem
 
 
 class DriversTripBookApp(QMainWindow):
@@ -34,12 +34,15 @@ class DriversTripBookApp(QMainWindow):
 
         add_button = QPushButton('Přidat jízdu', self)
         add_button.clicked.connect(self.add_trip)
+        #add_button.setFixedWidth(100)
 
         update_button = QPushButton("Upravit jízdu", self)
         update_button.clicked.connect(self.update_trip)
+        #update_button.setFixedWidth(100)
 
         delete_button = QPushButton("Smazat jízdu", self)
         delete_button.clicked.connect(self.delete_trip)
+        #delete_button.setFixedWidth(100)
 
         save_file_button = QPushButton("Uložit do souboru", self)
         save_file_button.clicked.connect(self.save_data)
@@ -52,10 +55,14 @@ class DriversTripBookApp(QMainWindow):
         self.table.setAlternatingRowColors(True)
         self.setStyleSheet("background-color: #2D2F30; color: #FFFFFF")
         self.table.setColumnCount(4)
-        self.table.setHorizontalHeaderLabels(['Datum', 'Středisko', 'Popis cesty', 'Ujetá vzdálenost (km)'])
+        self.table.setHorizontalHeaderLabels(['Datum', 'Středisko', 'Popis cesty', 'Vzdálenost (km)'])
 
         # Nastavení šířky sloupců
-        self.table.setColumnWidth(4, 300)
+        self.table.setColumnWidth(0, 80)
+        self.table.setColumnWidth(1, 80)
+        self.table.setColumnWidth(2, 300)
+        self.table.setColumnWidth(3, 100)
+        
 
         # Přidání prvků do rozložení
         layout.addWidget(label_company_center)
@@ -70,9 +77,13 @@ class DriversTripBookApp(QMainWindow):
         layout.addWidget(label_distance)
         layout.addWidget(self.input_distance)
 
-        layout.addWidget(add_button)
-        layout.addWidget(update_button)
-        layout.addWidget(delete_button)
+        """ Vytvoření samostatného layoutu pro tlačítka """
+        buttons_layout = QHBoxLayout()
+        buttons_layout.addWidget(add_button)
+        buttons_layout.addWidget(update_button)
+        buttons_layout.addWidget(delete_button)
+        layout.addLayout(buttons_layout)
+
         layout.addWidget(save_file_button)
         layout.addWidget(load_file_button)
 
@@ -116,7 +127,7 @@ class DriversTripBookApp(QMainWindow):
 
     def save_data(self):
         print("ukládám data do souboru")
-        with open("DriversTripBook/drivers_trip_book.csv", mode="w", newline="") as file:
+        with open("drivers_trip_book.csv", mode="w", newline="") as file:
             writer = csv.writer(file, delimiter=",")
             for row in range(self.table.rowCount()):
                 row_data = []
@@ -130,7 +141,7 @@ class DriversTripBookApp(QMainWindow):
 
     def load_data(self):
         print("Načítám data ze souboru")
-        with open("DriversTripBook/drivers_trip_book.csv", mode="r") as file:
+        with open("drivers_trip_book.csv", mode="r") as file:
             reader = csv.reader(file, delimiter=",")
             for row_data in reader:
                 row_position = self.table.rowCount()

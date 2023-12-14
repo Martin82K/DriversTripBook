@@ -119,6 +119,20 @@ class DriversTripBookApp(QMainWindow):
 
     def update_trip(self):
         print("Upravuji jízdu.")
+        selected_row = self.table.currentRow()
+        if selected_row >= 0:
+            for column in range(self.table.columnCount()):
+                item = self.table.item(selected_row, column)
+                if item is not None:
+                    new_value, ok = QInputDialog.getText(
+                        self, "Upravit jízdu", 
+                        f"Upravit {self.table.horizontalHeaderItem(column).text()}:"
+                        )
+                    if ok:
+                        item.setText(new_value)
+        else:
+            print("Nelze upravit prázdný řádek.")
+            pass
 
     def delete_trip(self):
         print("Mažu jízdu.")

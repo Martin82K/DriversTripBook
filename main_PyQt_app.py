@@ -1,6 +1,6 @@
 import sys
 import csv
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QApplication, QInputDialog, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem
 
 
 class DriversTripBookApp(QMainWindow):
@@ -130,6 +130,8 @@ class DriversTripBookApp(QMainWindow):
                         )
                     if ok:
                         item.setText(new_value)
+                    else:
+                        print("Upravení jízdy se nezdařilo.")
         else:
             print("Nelze upravit prázdný řádek.")
             pass

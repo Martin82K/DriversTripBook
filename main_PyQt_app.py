@@ -54,6 +54,9 @@ class DriversTripBookApp(QMainWindow):
         self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels(['Datum', 'Středisko', 'Popis cesty', 'Ujetá vzdálenost (km)'])
 
+        # Nastavení šířky sloupců
+        self.table.setColumnWidth(4, 300)
+
         # Přidání prvků do rozložení
         layout.addWidget(label_company_center)
         layout.addWidget(self.input_company_center)
@@ -113,7 +116,7 @@ class DriversTripBookApp(QMainWindow):
 
     def save_data(self):
         print("ukládám data do souboru")
-        with open("drivers_trip_book.csv", mode="w", newline="") as file:
+        with open("DriversTripBook/drivers_trip_book.csv", mode="w", newline="") as file:
             writer = csv.writer(file, delimiter=",")
             for row in range(self.table.rowCount()):
                 row_data = []
@@ -127,7 +130,7 @@ class DriversTripBookApp(QMainWindow):
 
     def load_data(self):
         print("Načítám data ze souboru")
-        with open("drivers_trip_book.csv", mode="r") as file:
+        with open("DriversTripBook/drivers_trip_book.csv", mode="r") as file:
             reader = csv.reader(file, delimiter=",")
             for row_data in reader:
                 row_position = self.table.rowCount()

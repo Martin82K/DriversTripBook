@@ -34,15 +34,12 @@ class DriversTripBookApp(QMainWindow):
 
         add_button = QPushButton('Přidat jízdu', self)
         add_button.clicked.connect(self.add_trip)
-        #add_button.setFixedWidth(100)
 
         update_button = QPushButton("Upravit jízdu", self)
         update_button.clicked.connect(self.update_trip)
-        #update_button.setFixedWidth(100)
 
         delete_button = QPushButton("Smazat jízdu", self)
         delete_button.clicked.connect(self.delete_trip)
-        #delete_button.setFixedWidth(100)
 
         save_file_button = QPushButton("Uložit do souboru", self)
         save_file_button.clicked.connect(self.save_data)
@@ -82,6 +79,7 @@ class DriversTripBookApp(QMainWindow):
         buttons_layout.addWidget(add_button)
         buttons_layout.addWidget(update_button)
         buttons_layout.addWidget(delete_button)
+        
         layout.addLayout(buttons_layout)
 
         layout.addWidget(save_file_button)
@@ -124,6 +122,12 @@ class DriversTripBookApp(QMainWindow):
 
     def delete_trip(self):
         print("Mažu jízdu.")
+        selected_row = self.table.currentRow()
+        if selected_row >= 0:
+            self.table.removeRow(selected_row)
+        else:
+            print("Nelze smazat prázdný řádek.")
+            pass
 
     def save_data(self):
         print("ukládám data do souboru")

@@ -4,7 +4,7 @@
 
 Kniha Jízd je aplikace pro sledování a zaznamenávání jízd, vytvořená v Pythonu s použitím PyQt6. Umožňuje uživatelům přidávat, upravovat, mazat a ukládat záznamy o jízdách.
 
-Aktuální verze neklade důraz na visuální stránku a uspořádání. Tyto elementy budou řešeny v budoucích verzích. 
+Aktuální verze neklade důraz na visuální stránku a uspořádání. Tyto elementy budou řešeny v budoucích verzích. Nebylo vyvíjeno v prostředí QT Designeru.  
 
 ## Funkce
 

@@ -1,6 +1,7 @@
 import sys
 import csv
 from PyQt6.QtWidgets import QApplication, QInputDialog, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QMessageBox
+from PyQt6.QtCore import Qt 
 
 
 class DriversTripBookApp(QMainWindow):
@@ -18,6 +19,11 @@ class DriversTripBookApp(QMainWindow):
         self.setCentralWidget(central_widget)
 
         layout = QVBoxLayout()
+
+        label_main = QLabel('Kniha jízd')
+        label_main.setStyleSheet("font-size: 30px; font-weight: bold; color: #FFFFFF")
+        label_main.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(label_main)
 
         # Vytvoření prvků UI (popisek, vstupních polí, tlačítka)
         label_company_center = QLabel('Středisko:')

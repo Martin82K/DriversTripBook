@@ -8,7 +8,7 @@ class DriversTripBookApp(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle('Kniha Jízd')
+        self.setWindowTitle('Martin Kalkus - Kniha Jízd')
         self.setGeometry(960, 540, 600, 600)
 
         self.init_ui()

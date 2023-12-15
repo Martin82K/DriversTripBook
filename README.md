@@ -26,3 +26,6 @@ Samotnou aplikaci spustíte příkazem v terminálu:
 ```bash
 python main_PyQt_app.py
 ```
+
+## Ukázka 
+! [Screenshot aplikace](md_demo.png)

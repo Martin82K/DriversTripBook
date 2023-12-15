@@ -1,6 +1,6 @@
 import sys
 import csv
-from PyQt6.QtWidgets import QApplication, QInputDialog, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QApplication, QInputDialog, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QMessageBox
 
 
 class DriversTripBookApp(QMainWindow):
@@ -8,7 +8,7 @@ class DriversTripBookApp(QMainWindow):
         super().__init__()
 
         self.setWindowTitle('Kniha Jízd')
-        self.setGeometry(200, 200, 600, 600)
+        self.setGeometry(960, 540, 600, 600)
 
         self.init_ui()
 
@@ -21,16 +21,20 @@ class DriversTripBookApp(QMainWindow):
 
         # Vytvoření prvků UI (popisek, vstupních polí, tlačítka)
         label_company_center = QLabel('Středisko:')
-        self.input_company_center = QLineEdit(placeholderText='Stredisko005 - Soukromé, Služební - Služební cesta')
+        self.input_company_center = QLineEdit(
+            placeholderText='Stredisko005 - Soukromé, Služební - Služební cesta')
 
         label_trip_info = QLabel('Popis nebo cíl cesty:')
-        self.input_trip_info = QLineEdit(placeholderText="Zadej popis, cíl cesty nebo oblast")
+        self.input_trip_info = QLineEdit(
+            placeholderText="Zadej popis, cíl cesty nebo oblast")
 
         label_date = QLabel('Datum:')
-        self.input_date = QLineEdit(placeholderText='Zadej datum jízdy ve formátu DD.MM.RRRR')
+        self.input_date = QLineEdit(
+            placeholderText='Zadej datum jízdy ve formátu DD.MM.RRRR')
 
         label_distance = QLabel('Ujetá vzdálenost (km):')
-        self.input_distance = QLineEdit(placeholderText='Zadej ujeté kilometry')
+        self.input_distance = QLineEdit(
+            placeholderText='Zadej ujeté kilometry')
 
         add_button = QPushButton('Přidat jízdu', self)
         add_button.clicked.connect(self.add_trip)
@@ -47,21 +51,21 @@ class DriversTripBookApp(QMainWindow):
         load_file_button = QPushButton("Načíst ze souboru", self)
         load_file_button.clicked.connect(self.load_data)
 
-        # Vytvoření tabulky pro zobrazení dat
+        """Vytvoření tabulky pro zobrazení dat"""
         self.table = QTableWidget(self)
         self.table.setAlternatingRowColors(True)
         self.setStyleSheet("background-color: #2D2F30; color: #FFFFFF")
         self.table.setColumnCount(4)
-        self.table.setHorizontalHeaderLabels(['Datum', 'Středisko', 'Popis cesty', 'Vzdálenost (km)'])
+        self.table.setHorizontalHeaderLabels(
+            ['Datum', 'Středisko', 'Popis cesty', 'Vzdálenost (km)'])
 
-        # Nastavení šířky sloupců
+        # Nastavení šířky sloupců tabulky
         self.table.setColumnWidth(0, 80)
         self.table.setColumnWidth(1, 80)
         self.table.setColumnWidth(2, 300)
         self.table.setColumnWidth(3, 100)
-        
 
-        # Přidání prvků do rozložení
+        """Přidání prvků do rozložení"""
         layout.addWidget(label_company_center)
         layout.addWidget(self.input_company_center)
 
@@ -79,7 +83,7 @@ class DriversTripBookApp(QMainWindow):
         buttons_layout.addWidget(add_button)
         buttons_layout.addWidget(update_button)
         buttons_layout.addWidget(delete_button)
-        
+
         layout.addLayout(buttons_layout)
 
         layout.addWidget(save_file_button)
@@ -111,11 +115,11 @@ class DriversTripBookApp(QMainWindow):
         trip_info = self.input_trip_info.text()
         distance = self.input_distance.text()
 
+        """ Přiřazeení hodnot v tabulce"""
         self.table.setItem(row_position, 0, QTableWidgetItem(date))
         self.table.setItem(row_position, 1, QTableWidgetItem(company_center))
         self.table.setItem(row_position, 2, QTableWidgetItem(trip_info))
         self.table.setItem(row_position, 3, QTableWidgetItem(distance))
-
 
     def update_trip(self):
         print("Upravuji jízdu.")
@@ -125,16 +129,15 @@ class DriversTripBookApp(QMainWindow):
                 item = self.table.item(selected_row, column)
                 if item is not None:
                     new_value, ok = QInputDialog.getText(
-                        self, "Upravit jízdu", 
+                        self, "Upravit jízdu",
                         f"Upravit {self.table.horizontalHeaderItem(column).text()}:"
-                        )
+                    )
                     if ok:
                         item.setText(new_value)
                     else:
                         print("Upravení jízdy se nezdařilo.")
         else:
-            print("Nelze upravit prázdný řádek.")
-            pass
+            self.show_error_message("Nelze upravit prázdný řádek.")
 
     def delete_trip(self):
         print("Mažu jízdu.")
@@ -142,32 +145,61 @@ class DriversTripBookApp(QMainWindow):
         if selected_row >= 0:
             self.table.removeRow(selected_row)
         else:
-            print("Nelze smazat prázdný řádek.")
-            pass
+            self.show_error_message("Nelze smazat prázdný řádek.")
 
     def save_data(self):
         print("ukládám data do souboru")
-        with open("drivers_trip_book.csv", mode="w", newline="") as file:
-            writer = csv.writer(file, delimiter=",")
-            for row in range(self.table.rowCount()):
-                row_data = []
-                for column in range(self.table.columnCount()):
-                    item = self.table.item(row, column)
-                    if item is not None:
-                        row_data.append(item.text())
-                    else:
-                        row_data.append("") # prázdná buňka, pokud nejsou zadány žádné hodnoty
-                writer.writerow(row_data)
+        try:
+            with open("drivers_trip_book.csv", mode="w", newline="") as file:
+                writer = csv.writer(file, delimiter=",")
+                for row in range(self.table.rowCount()):
+                    row_data = []
+                    for column in range(self.table.columnCount()):
+                        item = self.table.item(row, column)
+                        if item is not None:
+                            row_data.append(item.text())
+                        else:
+                            # prázdná buňka, pokud nejsou zadány žádné hodnoty
+                            row_data.append("")
+                    writer.writerow(row_data)
+        except Exception:
+            self.show_error_message(
+                "Při ukládání dat došlo k neočekávané chybě.")
+
+    def clear_table(self):
+        """ Smaže tabulku před novým načtením dat ze souboru s daty. """
+        try:
+            while self.table.rowCount() > 0:
+                self.table.removeRow(0)
+        except Exception:
+            self.show_error_message("Tabulka je prázdná.")
 
     def load_data(self):
         print("Načítám data ze souboru")
-        with open("drivers_trip_book.csv", mode="r") as file:
-            reader = csv.reader(file, delimiter=",")
-            for row_data in reader:
-                row_position = self.table.rowCount()
-                self.table.insertRow(row_position)
-                for column, item in enumerate(row_data):
-                    self.table.setItem(row_position, column, QTableWidgetItem(item))
+        self.clear_table()
+        try:
+            with open("drivers_trip_book.csv", mode="r") as file:
+                reader = csv.reader(file, delimiter=",")
+                for row_data in reader:
+                    row_position = self.table.rowCount()
+                    self.table.insertRow(row_position)
+                    for column, item in enumerate(row_data):
+                        self.table.setItem(row_position, column,
+                                           QTableWidgetItem(item))
+        except FileNotFoundError:
+            self.show_error_message(
+                "Soubor s daty neexistuje, 'drivers_trip_book.csv' nebyl nalezen.")
+        except Exception:
+            self.show_error_message(
+                "Při načítání dat došlo k neočekávané chybě.")
+
+    def show_error_message(self, message):
+        """ Error handling - Zobrazení chybové zprávy """
+        error_message = QMessageBox(self)
+        error_message.setIcon(QMessageBox.Icon.Critical)
+        error_message.setWindowTitle("Vyskytly se potíže")
+        error_message.setText(message)
+        error_message.show()
 
 
 def main():

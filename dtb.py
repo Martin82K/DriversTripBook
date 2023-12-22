@@ -21,7 +21,7 @@ class DriversTripBookApp(QMainWindow):
 
         label_main = QLabel('Kniha jízd')
         label_main.setStyleSheet(
-            "font-size: 30px; font-weight: bold; color: #FFFFFF")
+            "font-size: 30px; font-weight: bold; color: #darkblue")
         label_main.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(label_main)
 
@@ -59,8 +59,9 @@ class DriversTripBookApp(QMainWindow):
 
         """Vytvoření tabulky pro zobrazení dat"""
         self.table = QTableWidget(self)
-        self.table.setAlternatingRowColors(True)
-        self.setStyleSheet("background-color: #2D2F30; color: #FFFFFF")
+        self.table.setAlternatingRowColors(False)
+
+        self.setStyleSheet("background-color: #054869; color: #FFFFFF")
         self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels(
             ['Datum', 'Středisko', 'Popis cesty', 'Vzdálenost (km)'])

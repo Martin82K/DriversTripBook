@@ -1,8 +1,18 @@
 import sys
 import csv
+import mysql.connector 
 from PyQt6.QtWidgets import QApplication, QInputDialog, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QMessageBox
-from PyQt6.QtCore import Qt 
+from PyQt6.QtCore import Qt
 
+# připojení databáze:
+conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="")
+print(conn)
+cursor = conn.cursor()
+cursor.execute("CREATE DATABASE IF NOT EXISTS drivers_trip_book")
+conn.close()
 
 class DriversTripBookApp(QMainWindow):
     def __init__(self):
@@ -21,7 +31,8 @@ class DriversTripBookApp(QMainWindow):
         layout = QVBoxLayout()
 
         label_main = QLabel('Kniha jízd')
-        label_main.setStyleSheet("font-size: 30px; font-weight: bold; color: #FFFFFF")
+        label_main.setStyleSheet(
+            "font-size: 30px; font-weight: bold; color: #FFFFFF")
         label_main.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(label_main)
 

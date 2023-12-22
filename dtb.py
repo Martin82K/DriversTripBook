@@ -1,18 +1,7 @@
 import sys
 import csv
-import mysql.connector 
 from PyQt6.QtWidgets import QApplication, QInputDialog, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QMessageBox
 from PyQt6.QtCore import Qt
-
-# připojení databáze:
-conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="")
-print(conn)
-cursor = conn.cursor()
-cursor.execute("CREATE DATABASE IF NOT EXISTS drivers_trip_book")
-conn.close()
 
 class DriversTripBookApp(QMainWindow):
     def __init__(self):
@@ -47,7 +36,7 @@ class DriversTripBookApp(QMainWindow):
 
         label_date = QLabel('Datum:')
         self.input_date = QLineEdit(
-            placeholderText='Zadej datum jízdy ve formátu DD.MM.RRRR')
+            placeholderText='Zadej datum jízdy ve formátu RRRR-MM-DD, např. 2021-01-01')
 
         label_distance = QLabel('Ujetá vzdálenost (km):')
         self.input_distance = QLineEdit(

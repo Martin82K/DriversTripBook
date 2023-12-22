@@ -24,7 +24,7 @@ pip install -r requirements.txt
 
 Samotnou aplikaci spustíte příkazem v terminálu:
 ```bash
-python main_PyQt_app.py
+python dtb.py
 ```
 
 ## Ukázka

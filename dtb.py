@@ -21,7 +21,7 @@ class DriversTripBookApp(QMainWindow):
 
         label_main = QLabel('Kniha jízd')
         label_main.setStyleSheet(
-            "font-size: 30px; font-weight: bold; color: #darkblue")
+            "font-size: 30px; font-weight: bold; color: #FFFFFF")
         label_main.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(label_main)
 

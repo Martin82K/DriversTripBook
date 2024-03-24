@@ -1,11 +1,17 @@
 import sys
 import csv
-from PyQt6.QtWidgets import QApplication, QInputDialog, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QMessageBox
+from PyQt6.QtWidgets import QApplication, QInputDialog, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QMessageBox, QFileDialog
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QLabel
+
+
 
 class DriversTripBookApp(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        
 
         self.setWindowTitle('Martin Kalkus - Kniha Jízd')
         self.setGeometry(960, 540, 600, 600)
@@ -18,12 +24,15 @@ class DriversTripBookApp(QMainWindow):
         self.setCentralWidget(central_widget)
 
         layout = QVBoxLayout()
-
+        
         label_main = QLabel('Kniha jízd')
         label_main.setStyleSheet(
             "font-size: 30px; font-weight: bold; color: #FFFFFF")
         label_main.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(label_main)
+
+        # Vytvoření QPixmap z obrázku loga
+        logo_pixmap = QPixmap('path/to/your/logo.jpg')
 
         # Vytvoření prvků UI (popisek, vstupních polí, tlačítka)
         label_company_center = QLabel('Středisko:')
@@ -156,22 +165,26 @@ class DriversTripBookApp(QMainWindow):
 
     def save_data(self):
         print("ukládám data do souboru")
-        try:
-            with open("drivers_trip_book.csv", mode="w", newline="") as file:
-                writer = csv.writer(file, delimiter=",")
-                for row in range(self.table.rowCount()):
-                    row_data = []
-                    for column in range(self.table.columnCount()):
-                        item = self.table.item(row, column)
-                        if item is not None:
-                            row_data.append(item.text())
-                        else:
-                            # prázdná buňka, pokud nejsou zadány žádné hodnoty
-                            row_data.append("")
-                    writer.writerow(row_data)
-        except Exception:
-            self.show_error_message(
-                "Při ukládání dat došlo k neočekávané chybě.")
+        file_name, _ = QFileDialog.getSaveFileName(self,"Uložit jako","","CSV Files (*.csv);;All Files (*)", options=QFileDialog.Option.DontUseNativeDialog)
+        if file_name:
+            try:
+                with open(file_name, mode="w", newline="") as file:
+                    writer = csv.writer(file, delimiter=",")
+                    for row in range(self.table.rowCount()):
+                        row_data = []
+                        for column in range(self.table.columnCount()):
+                            item = self.table.item(row, column)
+                            if item is not None:
+                                row_data.append(item.text())
+                            else:
+                                # prázdná buňka, pokud nejsou zadány žádné hodnoty
+                                row_data.append("")
+                        writer.writerow(row_data)
+            except Exception:
+                self.show_error_message(
+                    "Při ukládání dat došlo k neočekávané chybě.")
+        else:
+            print("Ukládání zrušeno.")
 
     def clear_table(self):
         """ Smaže tabulku před novým načtením dat ze souboru s daty. """
@@ -184,21 +197,25 @@ class DriversTripBookApp(QMainWindow):
     def load_data(self):
         print("Načítám data ze souboru")
         self.clear_table()
-        try:
-            with open("drivers_trip_book.csv", mode="r") as file:
-                reader = csv.reader(file, delimiter=",")
-                for row_data in reader:
-                    row_position = self.table.rowCount()
-                    self.table.insertRow(row_position)
-                    for column, item in enumerate(row_data):
-                        self.table.setItem(row_position, column,
-                                           QTableWidgetItem(item))
-        except FileNotFoundError:
-            self.show_error_message(
-                "Soubor s daty neexistuje, 'drivers_trip_book.csv' nebyl nalezen.")
-        except Exception:
-            self.show_error_message(
-                "Při načítání dat došlo k neočekávané chybě.")
+        file_name, _ = QFileDialog.getOpenFileName(self,"Otevřít soubor","","CSV Files (*.csv);;All Files (*)", options=QFileDialog.Option.DontUseNativeDialog)
+        if file_name:
+            try:
+                with open(file_name, mode="r") as file:
+                    reader = csv.reader(file, delimiter=",")
+                    for row_data in reader:
+                        row_position = self.table.rowCount()
+                        self.table.insertRow(row_position)
+                        for column, item in enumerate(row_data):
+                            self.table.setItem(row_position, column,
+                                            QTableWidgetItem(item))
+            except FileNotFoundError:
+                self.show_error_message(
+                    "Soubor s daty neexistuje, '" + file_name + "' nebyl nalezen.")
+            except Exception:
+                self.show_error_message(
+                    "Při načítání dat došlo k neočekávané chybě.")
+        else:
+            print("Načítání zrušeno.")
 
     def show_error_message(self, message):
         """ Error handling - Zobrazení chybové zprávy """
